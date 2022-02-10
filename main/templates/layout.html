@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='main.css')}}">
+    {% if title %}
+        <title>Talabat - {{title}} </title>
+        <link rel="stylesheet" href="{{url_for('static', filename='other.css')}}">
+    {% else %}
+        <title>Talabat</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='home.css')}}">
+    {% endif %}
+    <meta charset="UTF-8">
+</head>
+<body>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+    selected = localStorage.getItem('selecteditems');
+    name = localStorage.getItem('name');
+    console.log(name)
+    document.getElementById('rest').innerHTML = 'Heart';
+    fetch('/hello', {
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    body: JSON.stringify({"selected":localStorage.getItem('selecteditems'),"name":localStorage.getItem('name')})
+    }).then(function (response) {
+        return response.text;
+    })
+        function decrementFun(index) {
+            var itemstr = index + 'item';
+            arr = JSON.parse(localStorage.getItem('selecteditems'));
+            console.log(arr);
+            if(document.getElementById(index).value>0) {
+                 for (let i=0;i<arr.length;i++) {
+                        if(document.getElementById(itemstr).textContent == arr[i].name) {
+                            if (arr[i].quantity == 1) {
+                                arr.splice(i,1);
+                                if(arr.length==0)
+                                {
+                                    localStorage.setItem('name','');
+                                    localStorage.setItem('selecteditems',JSON.stringify([]));
+                                } else {
+                                    localStorage.setItem('selecteditems', JSON.stringify(arr));
+                                }
+                            } else {
+                                arr[i].quantity--;
+                                localStorage.setItem('selecteditems', JSON.stringify(arr));
+                            }
+                        }
+                 }
+                document.getElementById(index).value--;
+            }
+        }
+        function incrementFun(index, name, item) {
+            var rname = localStorage.getItem("name");
+            arr = JSON.parse(localStorage.getItem('selecteditems'));
+            if (arr==null) {
+                arr = [];
+            }
+            var itemstr = index + 'item';
+            var pricestr = index + 'price';
+            if (rname && name.name == rname) {
+                document.getElementById(index).value++;
+                 if (document.getElementById(index).value>1) {
+                    for (let i=0;i<arr.length;i++) {
+                        if(document.getElementById(itemstr).textContent == arr[i].name) {
+                            arr[i].quantity++;
+                        }
+                    }
+                    localStorage.setItem('selecteditems', JSON.stringify(arr));
+                 } else {
+                    temp = {}
+                    temp['name']=document.getElementById(itemstr).textContent;
+                    temp['price']=document.getElementById(pricestr).textContent;
+                    temp['price'] = parseInt(temp['price'].slice(2));
+                    temp['quantity']=1;
+                    arr.push(temp);
+                    localStorage.setItem('selecteditems', JSON.stringify(arr));
+                 }
+            } else {
+                if (!rname) {
+                    localStorage.setItem('name', name.name);
+                    document.getElementById(index).value++;
+                    var temp = {}
+                    temp['name']=document.getElementById(itemstr).textContent;
+                    temp['price']=document.getElementById(pricestr).textContent;
+                    temp['price'] = parseInt(temp['price'].slice(2));
+                    temp['quantity']=1;
+                    arr[0]=temp;
+                    localStorage.setItem('selecteditems', JSON.stringify(arr));
+                } else if(rname!=name.name) {
+                     if(confirm("You already have items in your cart. Clear cart?") == true) {
+                        var arr = [];
+                        var temp = {}
+                        temp['name']=document.getElementById(itemstr).textContent;
+                        temp['price']=document.getElementById(pricestr).textContent;
+                        temp['price'] = parseInt(temp['price'].slice(2));
+                        temp['quantity']=1;
+                        arr[0]=temp;
+                        localStorage.setItem('selecteditems', JSON.stringify(arr));
+                        localStorage.setItem('name', name.name);
+                        document.getElementById(index).value++;
+                     }
+                }
+            }
+        }
+    </script>
+    <header class="site-header">
+        <nav class="py-0 navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+            <div class="container">
+                <a class="navbar-brand mr-4" href="/"><image src="{{ url_for('static', filename='talabat.jpg')}}"></image></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarToggle">
+                    <div class="navbar-nav mr-auto">
+
+                    </div>
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link" href="{{url_for('restaurants')}}">Restaurants</a>
+                        <a class="nav-item nav-link" href="{{url_for('orders')}}">Orders</a>
+                        {% if current_user.is_authenticated %}
+                            <a class="nav-item nav-link" href="{{url_for('account')}}">Account</a>
+                            <a class="nav-item nav-link" href="{{url_for('logout')}}">Logout</a>
+                        {% else %}
+                            <a class="nav-item nav-link" href="{{url_for('login')}}">Login</a>
+                            <a class="nav-item nav-link" href="{{url_for('register')}}">Register</a>
+                        {% endif %}
+                        <a class="nav-item nav-link" href="{{url_for('cart')}}"><i class="fa fa-shopping-cart" style="font-size:28px"></i></a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </main>
+</body>
+</html>

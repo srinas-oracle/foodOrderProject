@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+    <div class="row pt-4">
+        <div class="col-lg-3 col-md-3 col-sm-1"></div>
+        <div class="col-lg-6 col-md-6 col-sm-10 content-section">
+            <div class="article-metadata">
+                <h2>Your cart</h2>
+                <p id="rest"></p>
+            </div>
+            <div>
+                {% for food in foods.selecteditems %}
+                        <div class="row">
+                    <div class="col-md-8 col-lg-8 col-sm-8">
+                        {{ food.name }}
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-sm-4">
+                        {{ food.quantity}} x {{ food.price }} = {{ food.quantity*food.price }}
+                    </div>
+                </div>
+                    {% endfor %}
+                <div class="row">
+                    <div class="col-md-8 col-lg-8 col-sm-8"></div>
+                    <div class="col-md-4 col-lg-4 col-sm-4">
+                        <b>Total</b> : {{ total }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

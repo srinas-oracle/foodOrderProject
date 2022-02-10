@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+    <div class="row pt-2">
+        {% for restaurant in restaurants %}
+        <div class="col-md-4 pb-4">
+            <article class="media-content-section p-3" style="background: rgba(255, 255, 255, 9)">
+                <div class="row">
+                    <div class="col-lg-3 co-md-3 col-sm-3">
+                        <img class="article-img" src="{{ url_for('static', filename=restaurant.image) }}">
+                    </div>
+                    <div class="media-body col-lg-9 col-md-9 col-sm-9">
+                        <div class="article-metadata">
+                            <a class="mr-2" href="{{ url_for('category', categoryname=restaurant.type)}}">{{ restaurant.type }}</a>
+                        </div>
+                        <h4><a class="article-title" style="color:black">{{ restaurant.name }}</a></h4>
+                        <p class="article-content">Location: {{ restaurant.location }}</p>
+                        <button class="btn button-outline"><a style="color:white; underline:none" href="{{ url_for('order', restaurantid=restaurant.id)}}">Order Now</a></button>
+                    </div>
+                </div>
+            </article>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

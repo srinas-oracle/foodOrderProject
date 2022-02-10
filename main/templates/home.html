@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+<center>
+    <div class="mt-5">
+        <div class="row mt-3">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <h1 class="mt-5 pt-5" style="color:white; font-size:80px; text-align:left; font-family:Copperplate">MADE WITH LOVE. DELIVERED</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="ml-3">
+                <a href="{{url_for('restaurants')}}"><button class="btn button-outline">Order Now!</button></a>
+            </div>
+        </div>
+    </div>
+</center>
+{% endblock content %}
