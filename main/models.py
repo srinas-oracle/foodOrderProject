@@ -20,6 +20,14 @@ class Order(db.Model):
     active = db.Column(db.String(5), nullable=False)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    itms = db.relationship('Itms', backref='owns', lazy=True)
+
+class Itms(db.Model):
+    id = db.Column(db.Integer,primary_key=True)
+    name = db.Column(db.String(30), nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
 
 class Food(db.Model):
     id = db.Column(db.Integer, primary_key=True)

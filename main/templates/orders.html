@@ -8,7 +8,7 @@
                 <small>Date ordered:{{order.date_created}}</small>
             </div>
                 <h4>{{order.restaurantname}}</h4>
-                {% for item in order.selecteditems %}
+                {% for item in order.itms %}
                 <div class="row">
                     <div class="col-lg-4 col-md-4 col-sm-4">
                         {{ item.name }}
@@ -19,12 +19,6 @@
                     </div>
                 </div>
                 {% endfor %}
-                <div class="row">
-                    <div class="col-lg-8 col-md-8 col-sm-8"></div>
-                    <div class="col-lg-4 col-sm-4 col-md-4">
-                        <b>Total price: </b> {{ order.price }}
-                    </div>
-                </div>
     </div>
     {% endfor %}
 </div>

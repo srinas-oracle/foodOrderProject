@@ -1,4 +1,4 @@
-from main.models import User, Restaurant, Food, Order
+from main.models import User, Restaurant, Food, Order, Itms
 from flask import render_template, url_for, flash, redirect, request
 from main.forms import RegistrationForm, UpdateAccountForm, LoginForm
 from main import app, db, bcrypt
@@ -159,7 +159,26 @@ def account():
 
 @app.route("/orders")
 def orders():
-    return render_template('orders.html', title='Orders', tom=toms)
+    items = Order.query.filter_by(user_id=current_user.id).all()
+    return render_template('orders.html', title='Orders', tom=items)
+
+@app.route("/checkout", methods=['GET', 'POST'])
+def checkout():
+    if request.method == 'POST':
+        data = request.get_json()
+        name = data['name']
+        itms = data['itms']
+        order = Order(restaurantname=name, active='false', user_id=current_user.id)
+        db.session.add(order)
+        db.session.commit()
+        orders = Order.query.all()
+        orderid = orders[len(orders)-1].id
+        for i in range(len(itms)):
+            items = Itms(name=itms[i]['name'], price=itms[i]['price'], quantity=itms[i]['quantity'], order_id=orderid )
+            db.session.add(items)
+        db.session.commit()
+        return 'OK', 200
+    return render_template('checkout.html', title='Checkout')
 
 @app.route("/category/<string:categoryname>")
 def category(categoryname):
